@@ -1,79 +1,111 @@
 ﻿// Lab 1
+int userArrayLength = GetNumberInput();
+string[] userStringArray = PopulateWordArray(userArrayLength);
+char userChar = getCharacterInput();
+int charCount = CountCharacters(userStringArray, userChar);
+int charFreq = GetCharacterOccurrencePercentage(userStringArray, charCount);
 
-// ---------------- Check array Phase ----------------
+PrintResults(userChar, charCount, charFreq);
 
-Console.WriteLine("Please enter a number");
-int arrayLength = Int32.Parse(Console.ReadLine());
-string[] userStrings = new string[arrayLength];
-
-// ---------------- Check string Phase ----------------
-Console.WriteLine($"Please enter {arrayLength} {(arrayLength > 1 ? "words" : "word")}: ");
-// loop through the whole array
-
-bool containsSpace = false;
-
-
-for (int i = 0; i < arrayLength; i++)
+int GetNumberInput()
 {
-    // user inputs string into array
-    string userStringInput = Console.ReadLine();
+    Console.WriteLine("Please enter a number");
+    int arrayLength = Int32.Parse(Console.ReadLine());
 
-    if (userStringInput.Contains(" "))
-    {
-        containsSpace = true;
-    }
+    return arrayLength;
+}
 
-    while (containsSpace)
+string[] PopulateWordArray(int length)
+{
+    string[] userStrings = new string[length];
+    Console.WriteLine($"Please enter {length} {(length > 1 ? "words" : "word")}: ");
+    bool containsSpace = false;
+
+    for (int i = 0; i < length; i++)
     {
-        Console.WriteLine("Please ensure there are no spaces");
-        userStringInput = Console.ReadLine();
+        string userStringInput = Console.ReadLine();
+
+        // assume user input contains no spaces
         if (userStringInput.Contains(" "))
         {
             containsSpace = true;
         }
-        else
+        while (containsSpace)
         {
-            containsSpace = false;
+            Console.WriteLine("Please ensure there are no spaces");
+            userStringInput = Console.ReadLine();
+            if (userStringInput.Contains(" "))
+            {
+                containsSpace = true;
+            }
+            else
+            {
+                containsSpace = false;
+            }
+        }
+
+        userStrings[i] = userStringInput.ToLower();
+    }
+
+    return userStrings;
+}
+
+char getCharacterInput()
+{
+    bool isChar = false;
+    char userChar = ' ';
+    while (!isChar)
+    {
+        Console.WriteLine("Please enter a valid character (letters): ");
+        userChar = Console.ReadKey().KeyChar;
+        if (Char.IsLetter(userChar))
+        {
+            isChar = true;
+            return userChar;
         }
     }
-    
-    userStrings[i] = userStringInput.ToLower();
+
+    // should never be called for
+    return userChar;
 }
 
-// ---------------- Check character Phase ----------------
-bool isChar = false;
-Console.WriteLine("Please enter a character: ");
-char userChar = Console.ReadKey().KeyChar;
-if (Char.IsLetter(userChar))
+int CountCharacters(string[] words, char charToCount)
 {
-    isChar = true;
-}
-
-while (!isChar)
-{
-    Console.WriteLine("Please enter a valid character (letters): ");
-    userChar = Console.ReadKey().KeyChar;
-    if (Char.IsLetter(userChar))
+    int charFreq = 0;
+    for (int i = 0; i < words.Length; i++)
     {
-        isChar = true;
-    }
-}
-Console.WriteLine("");
-
-// ---------------- Check frequency Phase ----------------
-int totalChars = 0;
-int charFreq = 0;
-for (int i = 0; i < arrayLength; i++)
-{
-    foreach (char c in userStrings[i])
-    {
-        totalChars++;
-        if (c == (userChar))
+        foreach (char c in words[i])
         {
-            charFreq++;
+            if (c == (charToCount))
+            {
+                charFreq++;
+            }
         }
     }
+
+    return charFreq;
 }
 
-int charPercent = (charFreq * 100 / totalChars);
-Console.WriteLine($"The letter ‘{userChar}’ appears {charFreq} times in the array. This letter makes up more than {charPercent}% of the total number of characters.");
+int GetCharacterOccurrencePercentage(string[] words, int charFreq)
+{
+    int totalChars = 0;
+    for (int i = 0; i < words.Length; i++)
+    {
+        foreach (char c in words[i])
+        {
+            totalChars++;
+        }
+    }
+
+    int charPercent = (charFreq * 100 / totalChars);
+    return charPercent;
+}
+
+void PrintResults(char countedCharacter, int charFrequency, int charPercentage)
+{
+    Console.WriteLine($"The letter ‘{countedCharacter}’ appears {charFrequency} times in the array. This letter makes up more than {charPercentage}% of the total number of characters.");
+
+}
+
+
+
