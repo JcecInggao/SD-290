@@ -13,7 +13,17 @@
  * making it hard to find the famous person
  */
 
-int FindFamous(int[,] room)
+
+bool[,] knowsPerson = new bool[4, 4]
+{
+    { true, false, true, true},
+    { false, true, false, true},
+    { false, false, true, true},
+    { true, false, true, true}
+};
+
+
+int FindFamous(bool[,] room)
 {
 
     /*
